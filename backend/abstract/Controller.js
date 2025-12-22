@@ -58,7 +58,7 @@ export class Controller {
         try {
             const result = await this.model.findAll();
 
-            const body = result.map(r => r.toJSON());
+            const body = result.map((r) => r.toJSON());
 
             response.status(Status.Ok).json(body);
         } catch (error) {
@@ -85,7 +85,7 @@ export class Controller {
                 return;
             }
 
-            const body = result[1].map(r => r.toJSON());
+            const body = result[1].map((r) => r.toJSON());
 
             response.status(Status.Ok).json(body.length === 1 ? body[0] : body);
         } catch (error) {
