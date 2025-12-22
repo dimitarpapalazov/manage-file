@@ -92,6 +92,14 @@ export class Controller {
         const data = request.body;
 
         try {
+            if (data.id == undefined) {
+                response
+                    .status(Status.BadRequest)
+                    .json({ error: "Missing ID" });
+
+                return;
+            }
+
             const id = parseInt(data.id);
 
             const result = await this.model.update(data, {
