@@ -1,10 +1,10 @@
 import Status from "../enum/Status.js";
 
-/** @template {import('./Service.js').Service} Service */
-export class Service {
-    /** @param {Service} service  */
-    constructor(service) {
-        this.service = service;
+/** @template {typeof import('sequelize/types/model.js').default} Model */
+export class Controller {
+    /** @param {Model} model  */
+    constructor(model) {
+        this.model = model;
     }
     /**
      * @param {import('express/index.js').Request} request
@@ -12,9 +12,11 @@ export class Service {
      */
     async create(request, response) {
         try {
-            const result = await this.service.create(request.body);
+            const result = await this.model.create(request.body);
 
-            response.status(Status.Created).json(result);
+            const body = result.toJSON();
+
+            response.status(Status.Created).json(body);
         } catch (error) {
             // TODO: custom logger
             console.log(error);
@@ -31,12 +33,14 @@ export class Service {
         const id = parseInt(request.params.id);
 
         try {
-            const result = await this.service.read(id);
+            const result = await this.model.findByPk(id);
 
             if (result === null) {
                 response.status(Status.NotFound).end();
             } else {
-                response.status(Status.Ok).json(result);
+                const body = result.toJSON();
+
+                response.status(Status.Ok).json(body);
             }
         } catch (error) {
             // TODO: custom logger
@@ -52,9 +56,11 @@ export class Service {
      */
     async readAll(request, response) {
         try {
-            const result = await this.service.readAll();
+            const result = await this.model.findAll();
 
-            response.status(Status.Ok).json(result);
+            const body = result.map(r => r.toJSON());
+
+            response.status(Status.Ok).json(body);
         } catch (error) {
             // TODO: custom logger
             console.log(error);
@@ -71,18 +77,17 @@ export class Service {
         const data = request.body;
 
         try {
-            // TODO: make everything happen in service
-            const count = await this.service.update(data);
+            const result = await this.model.update(data, { returning: true });
 
-            if (count === 0) {
+            if (result[0] === 0) {
                 response.status(Status.NotFound).end();
 
                 return;
             }
 
-            const result = await this.service.read(data.id);
+            const body = result[1].map(r => r.toJSON());
 
-            response.status(Status.Ok).json(result);
+            response.status(Status.Ok).json(body.length === 1 ? body[0] : body);
         } catch (error) {
             // TODO: custom logger
             console.log(error);
@@ -99,9 +104,9 @@ export class Service {
         const id = parseInt(request.params.id);
 
         try {
-            const result = await this.service.delete(id);
+            const result = await this.model.destroy({ where: { id } });
 
-            if (result) {
+            if (result === 0) {
                 response.status(Status.NotFound).end();
             } else {
                 response.status(Status.NoContent).end();
