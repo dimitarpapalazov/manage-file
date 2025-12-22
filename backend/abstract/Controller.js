@@ -1,14 +1,29 @@
+import express from "express";
 import Status from "../enum/Status.js";
 
 /** @template {typeof import('sequelize/types/model.js').default} Model */
 export class Controller {
     /** @param {Model} model  */
     constructor(model) {
+        /** @protected */
         this.model = model;
+        /** @protected */
+        this.router = express.Router();
+        this.initializeRoutes();
     }
+
+    /** @protected */
+    initializeRoutes() {
+        this.router.post("/create", this.create.bind(this));
+        this.router.get("/read/:id", this.read.bind(this));
+        this.router.get("/read-all", this.readAll.bind(this));
+        this.router.put("/update", this.update.bind(this));
+        this.router.delete("/delete/:id", this.delete.bind(this));
+    }
+
     /**
-     * @param {import('express/index.js').Request} request
-     * @param {import('express/index.js').Response} response
+     * @param {express.Request} request
+     * @param {express.Response} response
      */
     async create(request, response) {
         try {
@@ -26,8 +41,8 @@ export class Controller {
     }
 
     /**
-     * @param {import('express/index.js').Request} request
-     * @param {import('express/index.js').Response} response
+     * @param {express.Request} request
+     * @param {express.Response} response
      */
     async read(request, response) {
         const id = parseInt(request.params.id);
@@ -51,8 +66,8 @@ export class Controller {
     }
 
     /**
-     * @param {import('express/index.js').Request} request
-     * @param {import('express/index.js').Response} response
+     * @param {express.Request} request
+     * @param {express.Response} response
      */
     async readAll(request, response) {
         try {
@@ -70,8 +85,8 @@ export class Controller {
     }
 
     /**
-     * @param {import('express/index.js').Request} request
-     * @param {import('express/index.js').Response} response
+     * @param {express.Request} request
+     * @param {express.Response} response
      */
     async update(request, response) {
         const data = request.body;
@@ -97,8 +112,8 @@ export class Controller {
     }
 
     /**
-     * @param {import('express/index.js').Request} request
-     * @param {import('express/index.js').Response} response
+     * @param {express.Request} request
+     * @param {express.Response} response
      */
     async delete(request, response) {
         const id = parseInt(request.params.id);
