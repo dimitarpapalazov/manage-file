@@ -92,7 +92,14 @@ export class Controller {
         const data = request.body;
 
         try {
-            const result = await this.model.update(data, { returning: true });
+            const id = parseInt(data.id);
+
+            const result = await this.model.update(data, {
+                where: {
+                    id,
+                },
+                returning: true,
+            });
 
             if (result[0] === 0) {
                 response.status(Status.NotFound).end();
