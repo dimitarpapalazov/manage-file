@@ -1,7 +1,7 @@
 import { Model, DataTypes } from "sequelize";
 
 export class User extends Model {
-    // TODO: add type for "sequelize" param
+    /** @param {import('sequelize/index.js')} sequelize */
     static initialize(sequelize) {
         User.init(
             {
