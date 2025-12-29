@@ -25,7 +25,7 @@ export class User extends Model {
             },
             {
                 sequelize,
-                modelName: "User",
+                modelName: "user",
             },
         );
     }
