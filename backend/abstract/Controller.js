@@ -7,7 +7,7 @@ export class Controller {
     constructor(model) {
         /** @protected */
         this.model = model;
-        /** @protected */
+        /** @readonly */
         this.router = express.Router();
         this.initializeRoutes();
     }
