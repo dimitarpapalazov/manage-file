@@ -1,7 +1,7 @@
 import Status from "../enum/Status.js";
 import bcrypt from "bcrypt";
 import { Controller } from "../abstract/Controller.js";
-import { User } from "./user.model.js";
+import { User } from "./User.js";
 
 /** @extends {Controller<typeof User>} */
 export class UserController extends Controller {

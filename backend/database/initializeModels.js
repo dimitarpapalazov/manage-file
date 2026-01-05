@@ -1,4 +1,4 @@
-import { User } from "../user/user.model.js";
+import { User } from "../user/User.js";
 
 /** @param {import('sequelize/index.js')} sequelize */
 export function initializeModels(sequelize) {
